@@ -118,7 +118,7 @@ VelodyneDriver::VelodyneDriver(ros::NodeHandle node,
     VelodyneNodeConfig> > (private_nh);
   dynamic_reconfigure::Server<velodyne_driver::VelodyneNodeConfig>::
     CallbackType f;
-  f = boost::bind (&VelodyneDriver::callback, this, _1, _2);
+  f = boost::bind (&VelodyneDriver::callback, this, _1);
   srv_->setCallback (f); // Set callback function und call initially
 
   // initialize diagnostics
@@ -228,8 +228,7 @@ bool VelodyneDriver::poll(void)
   return true;
 }
 
-void VelodyneDriver::callback(velodyne_driver::VelodyneNodeConfig &config,
-              uint32_t level)
+void VelodyneDriver::callback(const velodyne_driver::VelodyneNodeConfig& config)
 {
   ROS_INFO("Reconfigure Request");
   config_.time_offset = config.time_offset;

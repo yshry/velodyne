@@ -7,7 +7,9 @@ set(${PROJECT_NAME}_CATKIN_DEPS
     nodelet
     roscpp
     tf
-    velodyne_msgs)
+    velodyne_msgs
+    roslint
+)
 
 find_package(catkin REQUIRED COMPONENTS ${${PROJECT_NAME}_CATKIN_DEPS})
 
@@ -30,6 +32,9 @@ catkin_package(CATKIN_DEPENDS ${${PROJECT_NAME}_CATKIN_DEPS}
 # compile the driver and input library
 add_subdirectory(src/lib)
 add_subdirectory(src/driver)
+
+set(ROSLINT_CPP_OPTS "--filter=-build/c++11,-build/include_what_you_use")
+roslint_cpp()
 
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
