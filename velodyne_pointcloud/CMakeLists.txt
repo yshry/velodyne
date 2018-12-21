@@ -15,7 +15,10 @@ set(${PROJECT_NAME}_CATKIN_DEPS
 )
 
 find_package(catkin REQUIRED COMPONENTS
-             ${${PROJECT_NAME}_CATKIN_DEPS} pcl_conversions)
+  ${${PROJECT_NAME}_CATKIN_DEPS}
+  pcl_conversions
+  roslint
+)
 find_package(Boost COMPONENTS signals)
 
 # Resolve system dependency on yaml-cpp, which apparently does not
@@ -55,6 +58,9 @@ catkin_package(
 
 add_subdirectory(src/lib)
 add_subdirectory(src/conversions)
+
+set(ROSLINT_CPP_OPTS "--filter=-build/c++11,-build/include_what_you_use")
+roslint_cpp()
 
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})

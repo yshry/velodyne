@@ -34,22 +34,20 @@ namespace velodyne_pointcloud
       CloudNodeConfig> > (private_nh);
     dynamic_reconfigure::Server<velodyne_pointcloud::CloudNodeConfig>::
       CallbackType f;
-    f = boost::bind (&Convert::callback, this, _1, _2);
+    f = boost::bind (&Convert::callback, this, _1);
     srv_->setCallback (f);
 
     // subscribe to VelodyneScan packets
-    velodyne_scan_ =
-      node.subscribe("velodyne_packets", 10,
+    velodyne_scan_ = node.subscribe("velodyne_packets", 10,
                      &Convert::processScan, (Convert *) this,
                      ros::TransportHints().tcpNoDelay(true));
   }
   
-  void Convert::callback(velodyne_pointcloud::CloudNodeConfig &config,
-                uint32_t level)
+  void Convert::callback(const velodyne_pointcloud::CloudNodeConfig &config)
   {
-  ROS_INFO("Reconfigure Request");
-  data_->setParameters(config.min_range, config.max_range, config.view_direction,
-                       config.view_width);
+    ROS_INFO("Reconfigure Request");
+    data_->setParameters(config.min_range, config.max_range, config.view_direction,
+                         config.view_width);
   }
 
   /** @brief Callback for raw scan messages. */

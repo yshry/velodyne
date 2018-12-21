@@ -8,10 +8,12 @@ set(${PROJECT_NAME}_CATKIN_DEPS
     roscpp
     tf
     velodyne_msgs
-    roslint
 )
 
-find_package(catkin REQUIRED COMPONENTS ${${PROJECT_NAME}_CATKIN_DEPS})
+find_package(catkin REQUIRED COMPONENTS
+  ${${PROJECT_NAME}_CATKIN_DEPS}
+  roslint
+)
 
 # This driver uses Boost threads
 find_package(Boost REQUIRED COMPONENTS thread)

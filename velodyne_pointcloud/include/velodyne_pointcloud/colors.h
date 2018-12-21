@@ -15,8 +15,8 @@
     @author Jack O'Quin
 */
 
-#ifndef _VELODYNE_POINTCLOUD_COLORS_H_
-#define _VELODYNE_POINTCLOUD_COLORS_H_
+#ifndef VELODYNE_POINTCLOUD_COLORS_H
+#define VELODYNE_POINTCLOUD_COLORS_H
 
 #include <ros/ros.h>
 #include <pcl_ros/point_cloud.h>
@@ -25,25 +25,23 @@
 
 namespace velodyne_pointcloud
 {
-  // shorter names for point cloud types in this namespace
-  typedef velodyne_pointcloud::PointXYZIR VPoint;
-  typedef pcl::PointCloud<VPoint> VPointCloud;
+// shorter names for point cloud types in this namespace
+typedef velodyne_pointcloud::PointXYZIR VPoint;
+typedef pcl::PointCloud<VPoint> VPointCloud;
 
-  class RingColors
-  {
-  public:
+class RingColors
+{
+public:
+  RingColors(ros::NodeHandle node, ros::NodeHandle private_nh);
+  ~RingColors() {}
 
-    RingColors(ros::NodeHandle node, ros::NodeHandle private_nh);
-    ~RingColors() {}
+private:
+  void convertPoints(const VPointCloud::ConstPtr &inMsg);
 
-  private:
+  ros::Subscriber input_;
+  ros::Publisher output_;
+};
 
-    void convertPoints(const VPointCloud::ConstPtr &inMsg);
+}  // namespace velodyne_pointcloud
 
-    ros::Subscriber input_;
-    ros::Publisher output_;
-  };
-
-} // namespace velodyne_pointcloud
-
-#endif // _VELODYNE_POINTCLOUD_COLORS_H_
+#endif  // VELODYNE_POINTCLOUD_COLORS_H
