@@ -75,4 +75,21 @@ ros::Time rosTimeFromGpsTimestamp(const uint8_t * const data) {
     return stamp;
 }
 
+ros::Time rosTimeFromGpsTimestamp(const uint8_t * const data, const long tv_sec, const long tv_usec) {
+    const int HOUR_TO_SEC = 3600;
+    // time for each packet is a 4 byte uint
+    // It is the number of microseconds from the top of the hour
+    uint32_t usecs = (uint32_t) ( ((uint32_t) data[3]) << 24 |
+                                  ((uint32_t) data[2] ) << 16 |
+                                  ((uint32_t) data[1] ) << 8 |
+                                  ((uint32_t) data[0] ));
+    //ros::Time time_nom = ros::Time::now(); // use this to recover the hour
+    ros::Time time_nom = ros::Time(tv_sec, tv_usec*1000);
+    uint32_t cur_hour = time_nom.sec / HOUR_TO_SEC;
+    ros::Time stamp = ros::Time((cur_hour * HOUR_TO_SEC) + (usecs / 1000000),
+                                (usecs % 1000000) * 1000);
+    stamp = resolveHourAmbiguity(stamp, time_nom);
+    return stamp;
+}
+
 #endif //VELODYNE_DRIVER_TIME_CONVERSION_HPP

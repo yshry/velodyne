@@ -317,7 +317,14 @@ namespace velodyne_driver
               packet_rate_.sleep();
             
             memcpy(&pkt->data[0], pkt_data+42, packet_size);
-            pkt->stamp = ros::Time::now(); // time_offset not considered here, as no synchronization required
+            if (!gps_time_) {
+              pkt->stamp = ros::Time::now(); // time_offset not considered here, as no synchronization required
+            } else {
+              // time for each packet is a 4 byte uint located starting at offset 1200 in
+              // the data packet
+              pkt->stamp = rosTimeFromGpsTimestamp(&(pkt->data[1200]), header->ts.tv_sec, header->ts.tv_usec);
+              //ROS_INFO("set time by gps: %d.%d %d.%d", pkt->stamp.sec, pkt->stamp.nsec, header->ts.tv_sec, header->ts.tv_usec);
+            }
             empty_ = false;
             return 0;                   // success
           }
